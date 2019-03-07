@@ -1,0 +1,28 @@
+// Default value is just sythetic sugar, Default value is evaluated at compile time, based on Static Type
+class Base
+{
+public:
+	virtual void doit(int i = 9)
+	{
+		std::cout << "Base doit i=" << i << "\n";
+	}
+};
+class Derived  : public Base
+{
+public:
+	void doit(int i = 12)
+	{
+		std::cout << "Derived i=" << i << "\n";
+	}
+};
+
+int main()
+{
+	// Default value is just sythetic sugar, Default value is evaluated at compile time, based on Static Type
+	Base *b = new Derived();
+	Derived *d = dynamic_cast<Derived*>(b); 
+	b->doit(); // Derived i=9
+	d->doit(); // Derived i=12
+	return 0;
+	
+}
