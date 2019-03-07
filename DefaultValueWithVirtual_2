@@ -1,0 +1,46 @@
+// Default value is just sythetic sugar, Default value agrument cannot be initialized by a member function, even if its constexpr
+#include <iostream>
+
+class Base
+{
+public:
+	virtual void doit(int i = 9)
+	{
+		std::cout << "Base doit i=" << i << "\n";
+	}
+	virtual void doitMore( int j = 7) 
+	{
+		std::cout << "Base doitMore j=" << j << "\n";
+	}
+	constexpr int getDefault() 
+	{ 
+	 	return 20;
+	}
+};
+class Derived  : public Base
+{
+public:
+	void doit(int i = 12)
+	{
+		std::cout << "Derived i=" << i << "\n";
+	}
+	void doitMore( int j = getDefault())  //ERROR  error: cannot call member function 'constexpr int Derived::getDefault()' without object
+	{
+		std::cout << "Base doitMore j=" << j << "\n";
+	}
+
+	constexpr int getDefault() { return 30;}
+};
+
+int main()
+{
+	// Default value is just sythetic sugar, Default value is evaluated at compile time, based on Static Type
+	Base *b = new Derived();
+	Derived *d = dynamic_cast<Derived*>(b); 
+	b->doit(); // Derived i=9
+	d->doit(); // Derived i=12
+	b->doitMore();
+	d->doitMore(); //ERROR: call to 'virtual void Derived::doitMore(int)' uses the default argument for parameter 1, which is not yet defined
+	return 0;
+	
+}
