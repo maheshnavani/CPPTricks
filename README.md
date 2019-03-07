@@ -1,0 +1,2 @@
+# CPPTricks
+CPP Tricky Question 
