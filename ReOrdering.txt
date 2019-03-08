@@ -1,0 +1,24 @@
+
+int x = 0;
+int y = 0 ;
+int r1 = 0;
+int r2 = 0;
+
+CORE1 , T1
+
+  x = 1;
+  r1 = y;
+  
+CORE2, T2
+  y = 1
+  r2 =x;
+  
+  
+ Possible values of 
+ r1 , r2
+ 0 , 1
+ 1, 0
+ 1, 1
+ 0, 0  // Due to re-ordering r1=y and r2=x can execute before x = 1 / y = 1
+ 
+ Memory barrier help stop re-ordering
