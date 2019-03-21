@@ -1,21 +1,21 @@
+# include <iostream>
+# include <type_traits>
 
-/*
+using namespace std;
+// 1. Tag dispatch 
+// 2. SFINAE (pronouced as SINAE) Subsitituation failure is not an error
 
-//Tag Dispatch :
-//1. Tag dispatching is a useful complement to enable_if. 
-//2. It can also be used in conjunction with trailing return type and decltype. (expression SFINAE) 
-//3. It is most useful when you have multiple overloads for the same function, and they all have conditions for when they can be called. With just enable_if,
-// you have to test for not just the overloads condition, but also the negation of all the other overloads conditions, lest you get overload ambiguity. Tag dispatch will help reduce the mess: 
+
+/*Tag Dispatch :
+1. Tag dispatching is a useful complement to enable_if. 
+2. It can also be used in conjunction with trailing return type and decltype. (expression SFINAE) 
+3. It is most useful when you have multiple overloads for the same function, and they all have conditions for when they can be called. With just enable_if,
+ you have to test for not just the overloads condition, but also the negation of all the other overloads conditions, lest you get overload ambiguity. Tag dispatch will help reduce the mess: 
+*/
+
 
 template <typename T>
-bool Equals (T lhs , T rhs)
-{
-
-	return Equals(lhs,rhs,   conditional_t<is_floating_point<T>::value,std::true_type,std::false_type> {}  ); 
-}
-
-template <typename T>
-bool Equals (T lhs , T rhs, false_type)
+bool Equals (T& lhs , T& rhs, std::false_type)
 {
 	std::cout << "lhs=" << lhs <<"\n";
 	std::cout << "rhs=" << rhs <<"\n";
@@ -23,12 +23,20 @@ bool Equals (T lhs , T rhs, false_type)
 }
 
 template <typename T>
-bool Equals (T lhs , T rhs,true_type)
+bool Equals (T& lhs , T& rhs,std::true_type)
 {
 	std::cout << "lhs=" << lhs <<"\n";
 	std::cout << "rhs=" << rhs <<"\n";
 	return ( abs(lhs - rhs) < 0.001);
 }
+
+template <typename T>
+bool Equals (T lhs , T rhs)
+{
+	return Equals(lhs,rhs, conditional_t<is_floating_point<T>::value,true_type,false_type>  {});
+	//return Equals(lhs,rhs,  std::true_type  {});
+}
+
 
 int main()
 {
@@ -37,7 +45,6 @@ int main()
 	return 0;
 }
 
-*/
 
 /*
 
